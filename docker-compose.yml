@@ -1,0 +1,15 @@
+version: '3.8'
+volumes:
+  api_project:
+services:
+  pg_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=perceptor
+      - POSTGRES_USER=andrei
+      - POSTGRES_DB=api_project
+    volumes:
+      - api_project:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
