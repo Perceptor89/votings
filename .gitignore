@@ -6,3 +6,5 @@ develop/
 media/*
 test.py
 tests.txt
+coverage.xml
+.coverage
