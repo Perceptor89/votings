@@ -1,0 +1,68 @@
+[
+    {
+        "model": "votings.voting",
+        "pk": 1,
+        "fields": {
+            "title": "Самый быстрый",
+            "start_date": "2023-07-08",
+            "end_date": "2023-07-22",
+            "max_votes": 200
+        }
+    },
+    {
+        "model": "votings.voting",
+        "pk": 2,
+        "fields": {
+            "title": "Самый сильный",
+            "start_date": "2023-07-01",
+            "end_date": "2023-07-08",
+            "max_votes": null
+        }
+    },
+    {
+        "model": "votings.voting",
+        "pk": 3,
+        "fields": {
+            "title": "Самый смелый",
+            "start_date": "2023-07-30",
+            "end_date": "2023-08-30",
+            "max_votes": null
+        }
+    },
+    {
+        "model": "votings.character",
+        "pk": 1,
+        "fields": {
+            "last_name": "Flash",
+            "first_name": "",
+            "second_name": "",
+            "age": null,
+            "description": "",
+            "photo": "character_images/Flash.jpg"
+        }
+    },
+    {
+        "model": "votings.character",
+        "pk": 2,
+        "fields": {
+            "last_name": "Spiderman",
+            "first_name": "",
+            "second_name": "",
+            "age": null,
+            "description": "",
+            "photo": "character_images/Spiderman.webp"
+        }
+    },
+    {
+        "model": "votings.character",
+        "pk": 3,
+        "fields": {
+            "last_name": "Ironman",
+            "first_name": "",
+            "second_name": "",
+            "age": null,
+            "description": "",
+            "photo": "character_images/Ironman.jpg"
+        }
+    }
+]

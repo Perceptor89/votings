@@ -2,6 +2,7 @@
 .env
 grow_points.txt
 develop/
-*__pycache__*
-test*
-*/media
+**__pycache__
+media/*
+test.py
+tests.txt
