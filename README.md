@@ -1,5 +1,3 @@
-#### Tests: -->
-<!-- [![Actions Status](https://github.com/Perceptor89/votings/workflows/hexlet-check/badge.svg)](https://github.com/Perceptor89/votings/actions)
 [![Python CI](https://github.com/Perceptor89/votings/actions/workflows/pyci.yml/badge.svg)](https://github.com/Perceptor89/votings/actions/workflows/pyci.yml)
 
 <!-- ## Example of website:
