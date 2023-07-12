@@ -1,5 +1,4 @@
 from django.db import models
-import os
 
 
 class Voting(models.Model):
@@ -11,9 +10,9 @@ class Voting(models.Model):
 
     def __str__(self) -> str:
         return f'{self.id} | {self.title}'
-    
+
     class Meta:
-        ordering = ['id']
+        ordering = ['-id']
 
 
 def character_image_path(instance, filename: str):
@@ -38,9 +37,9 @@ class Character(models.Model):
 
 class CharacterVote(models.Model):
     voting = models.ForeignKey('Voting', related_name='votes',
-                                on_delete=models.CASCADE)
+                               on_delete=models.CASCADE)
     character = models.ForeignKey('Character', related_name='votes',
-                                   on_delete=models.CASCADE)
+                                  on_delete=models.CASCADE)
     amount = models.IntegerField()
 
     # def __str__(self):

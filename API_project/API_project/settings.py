@@ -12,19 +12,28 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import sys
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load variables from .env
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-_ne0t%iw=e^(=506*x58-s^u(t5hd$(a@d&@s!j8#b9)%cd3%x"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.getenv('DEBUG') == 'True')
+
+# Check if testing mode
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -87,11 +96,11 @@ DATABASES = {
     # }
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "api_project",
-        "USER": "andrei",
-        "PASSWORD": "perceptor",
-        "HOST": "0.0.0.0",
-        "PORT": "5432",
+        "NAME": os.getenv('DB_NAME'),
+        "USER": os.getenv('DB_USER'),
+        "PASSWORD": os.getenv('DB_PASSWORD'),
+        "HOST": os.getenv('DB_HOST'),
+        "PORT": os.getenv('DB_PORT'),
     }
 }
 
@@ -148,3 +157,6 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+if TESTING:
+    MEDIA_ROOT = 'API_project/votings/tests/fixtures/media/'

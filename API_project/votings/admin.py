@@ -1,17 +1,18 @@
 from django.contrib import admin
 from .models import Voting, Character, CharacterVote
-from django.db.models import Sum
+from django.db.models import Max
 
 
 @admin.register(Voting)
 class VotingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'start_date', 'end_date', 'max_votes', 'votes_amount']
+    list_display = ['id', 'title', 'start_date', 'end_date', 'max_votes',
+                    'leader_votes']
     empty_value_display = "not set"
     list_display_links = ['title']
 
     @admin.display(empty_value=0)
-    def votes_amount(self, obj):
-        return obj.votes.aggregate(total=Sum('amount'))['total']
+    def leader_votes(self, obj):
+        return obj.votes.aggregate(leader_votes=Max('amount'))['leader_votes']
 
 
 @admin.register(Character)

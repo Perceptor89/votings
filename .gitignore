@@ -1,3 +1,7 @@
 .venv
 .env
 grow_points.txt
+develop/
+*__pycache__*
+test*
+*/media
