@@ -7,3 +7,6 @@ lint:
 coverage:
 	coverage run API_project/manage.py test votings
 	coverage xml
+
+run:
+	API_project/manage.py runserver

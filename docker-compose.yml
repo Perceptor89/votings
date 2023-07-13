@@ -5,10 +5,8 @@ services:
   pg_db:
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_PASSWORD=perceptor
-      - POSTGRES_USER=andrei
-      - POSTGRES_DB=api_project
+    env_file:
+      - ./.env
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:

@@ -1,4 +1,4 @@
-name: Python CI
+name: flake8
 
 on: push
 
@@ -20,5 +20,3 @@ jobs:
           pip install -r requirments.txt
       - name: run linter
         run: make lint
-      - name: run tests
-        run: make test_votings

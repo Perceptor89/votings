@@ -1,5 +1,8 @@
 [![Python CI](https://github.com/Perceptor89/votings/actions/workflows/pyci.yml/badge.svg)](https://github.com/Perceptor89/votings/actions/workflows/pyci.yml)
 
+# VOTINGS
+#### Web API for managing simple votings
+
 <!-- ## Example of website:
 [Task manager](https://protected-harbor-92063.herokuapp.com "Heroku.com") -->
 
