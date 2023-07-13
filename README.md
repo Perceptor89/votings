@@ -4,7 +4,7 @@
 #### Web API for managing simple votings
 
 ## Example of website:
-[Votings app](https://185.250.205.16:8000) ('admin' for login and password)
+[Votings app](http://185.250.205.16:8000) ('admin' for login and password)
 
 ## Available end-points:
 |           End-point |     Description             |
