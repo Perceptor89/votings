@@ -3,8 +3,8 @@
 # VOTINGS
 #### Web API for managing simple votings
 
-<!-- ## Example of website:
-[Task manager](https://protected-harbor-92063.herokuapp.com "Heroku.com") -->
+## Example of website:
+[Votings app](https://185.250.205.16:8000) ('admin' for login and password)
 
 ## Available end-points:
 |           End-point |     Description             |
@@ -28,7 +28,7 @@ You need to clone repository first:
 git clone https://github.com/Perceptor89/votings.git
 ```
 
-Rename ".env.example" to ".env" and fill it out.
+Rename ".env.example" to ".env" and fill it in.
 
 To install dependencies use new virtual environment. Then install dependencies.
 
@@ -36,10 +36,15 @@ To install dependencies use new virtual environment. Then install dependencies.
 pip install -r requirements.txt
 ```
 
-Migrations should be done by:
+You can run postgresql by docker-compose:
 
 ```bash
-./manage.py makemigrations
+docker-compose up -d
+```
+
+Need to migrate:
+
+```bash
 ./manage.py migrate
 ```
 

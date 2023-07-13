@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.serializers import SerializerMetaclass
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from votings.models import Character, Voting
 from votings.permissions import IsStafforReadOnly
 from votings.serializers import (CharacterSerializer, CharacterVoteSerializer,
@@ -21,7 +22,7 @@ class VotingViewSet(viewsets.ModelViewSet):
         .prefetch_related('votes')\
         .annotate(leader_votes=Max('votes__amount'))
     serializer_class = VotingSerializer
-    permission_classes = [IsStafforReadOnly]
+    permission_classes = [IsStafforReadOnly, IsAuthenticatedOrReadOnly]
 
     @action(detail=False)
     def active(self, request, *args, **kwargs):
@@ -126,7 +127,7 @@ class VotingViewSet(viewsets.ModelViewSet):
 class CharacterViewSet(viewsets.ModelViewSet):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
-    permission_classes = [IsStafforReadOnly]
+    permission_classes = [IsStafforReadOnly, IsAuthenticatedOrReadOnly]
 
     @action(methods=['get'], detail=True)
     def get_img(self, request, *args, **kwargs):
