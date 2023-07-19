@@ -1,20 +1,23 @@
+import os
 from django.db.models import F, Q, Max
 from django.db.models.query import QuerySet
 from django.http import FileResponse
 from django.utils import timezone
+from django.conf import settings
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.serializers import SerializerMetaclass
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser
 from votings.models import Character, Voting
 from votings.permissions import IsStafforReadOnly
 from votings.serializers import (CharacterSerializer, CharacterVoteSerializer,
                                  VotingSerializer)
 from rest_framework.pagination import PageNumberPagination
 from .utilities import is_active_voting
+from django.db import transaction
 
 
 class VotingViewSet(viewsets.ModelViewSet):
@@ -22,7 +25,7 @@ class VotingViewSet(viewsets.ModelViewSet):
         .prefetch_related('votes')\
         .annotate(leader_votes=Max('votes__amount'))
     serializer_class = VotingSerializer
-    permission_classes = [IsStafforReadOnly, IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStafforReadOnly]
 
     @action(detail=False)
     def active(self, request, *args, **kwargs):
@@ -58,7 +61,7 @@ class VotingViewSet(viewsets.ModelViewSet):
         if not voting.exists():
             return Response(
                 data={"detail": f"Voting id {pk} does not exist"},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         query = voting.get().characters\
@@ -127,66 +130,61 @@ class VotingViewSet(viewsets.ModelViewSet):
 class CharacterViewSet(viewsets.ModelViewSet):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
-    permission_classes = [IsStafforReadOnly, IsAuthenticatedOrReadOnly]
-
-    @action(methods=['get'], detail=True)
-    def get_img(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            return Response(
-                data={"detail": "You need to be a staff member"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        pk = kwargs['pk']
-        character = self.queryset.filter(id=pk)
-        if not character.exists():
-            return Response(
-                data={"detail": f"Character id {pk} does not exist"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        character = character.get()
-        if not character.photo.storage.exists(character.photo.name):
-            return Response(
-                data={"detail": f"Character id {pk} does not have image"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        return FileResponse(character.photo.file)
+    permission_classes = [IsStafforReadOnly]
 
 
 class CharacterVoteView(APIView):
     def put(self, request, *args, **kwargs):
         pk = kwargs['pk']
         pk_2 = kwargs['pk_2']
-        voting = Voting.objects.filter(id=pk)
-        if not voting.exists():
+
+        with transaction.atomic():
+            voting = Voting.objects.filter(id=pk).select_for_update()
+            if not voting.exists():
+                return Response(
+                    data={"detail": f"Voting id {pk} does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            voting = voting.get()
+            if not is_active_voting(voting):
+                return Response(
+                    data={"detail": f"Voting id {pk} is finished"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            vote = voting.votes.filter(character_id=pk_2)
+            if not vote.exists():
+                return Response(
+                    data={"detail": f"Voting id {pk} has no member id {pk_2}"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            vote = vote.get()
+            vote.amount += 1
+            vote.save()
+
+            serializer = CharacterVoteSerializer(
+                vote,
+                many=False,
+                context={'request': request}
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class FileDownloadView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, file_path, *args, **kwargs):
+        media_root = settings.MEDIA_ROOT
+        full_path = os.path.join(media_root, file_path)
+        if os.path.exists(full_path):
+            return FileResponse(
+                open(full_path, 'rb'),
+                as_attachment=True,
+            )
+        else:
             return Response(
-                data={"detail": f"Voting id {pk} does not exist"},
+                data={"detail": f"No file {file_path}"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        voting = voting.get()
-        if not is_active_voting(voting):
-            return Response(
-                data={"detail": f"Voting id {pk} is finished"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        vote = voting.votes.filter(character_id=pk_2)
-        if not vote.exists():
-            return Response(
-                data={"detail": f"Voting id {pk} has no member id {pk_2}"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        vote = vote.get()
-
-        vote.amount += 1
-        vote.save()
-        serializer = CharacterVoteSerializer(
-            vote,
-            many=False,
-            context={'request': request}
-        )
-        return Response(serializer.data, status=status.HTTP_201_CREATED)

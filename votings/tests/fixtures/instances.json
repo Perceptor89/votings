@@ -36,7 +36,7 @@
             "last_name": "Flash",
             "first_name": "",
             "second_name": "",
-            "age": null,
+            "birth_date": "2004-07-05",
             "description": "",
             "photo": "character_images/Flash.jpg"
         }
@@ -48,7 +48,7 @@
             "last_name": "Spiderman",
             "first_name": "",
             "second_name": "",
-            "age": null,
+            "birth_date": "1989-05-03",
             "description": "",
             "photo": "character_images/Spiderman.webp"
         }
@@ -60,7 +60,7 @@
             "last_name": "Ironman",
             "first_name": "",
             "second_name": "",
-            "age": null,
+            "birth_date": "1987-08-17",
             "description": "",
             "photo": "character_images/Ironman.jpg"
         }

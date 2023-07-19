@@ -16,8 +16,8 @@ class CharacterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Character
-        fields = ['url', 'id', 'last_name', 'first_name', 'second_name', 'age',
-                  'description', 'votes_amount']
+        fields = ['url', 'id', 'last_name', 'first_name', 'second_name',
+                  'birth_date', 'description', 'votes_amount', 'photo']
 
 
 class CharacterVoteSerializer(serializers.HyperlinkedModelSerializer):
