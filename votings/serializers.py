@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from votings.models import Character, CharacterVote, Voting
+from votings.utilities import calculate_age
 
 
 class VotingSerializer(serializers.HyperlinkedModelSerializer):
@@ -13,11 +14,15 @@ class VotingSerializer(serializers.HyperlinkedModelSerializer):
 
 class CharacterSerializer(serializers.HyperlinkedModelSerializer):
     votes_amount = serializers.IntegerField(read_only=True)
+    age = serializers.SerializerMethodField()
 
     class Meta:
         model = Character
         fields = ['url', 'id', 'last_name', 'first_name', 'second_name',
-                  'birth_date', 'description', 'votes_amount', 'photo']
+                  'age', 'description', 'votes_amount', 'photo']
+        
+    def get_age(self, obj: Character):
+        return calculate_age(obj.birth_date)
 
 
 class CharacterVoteSerializer(serializers.HyperlinkedModelSerializer):

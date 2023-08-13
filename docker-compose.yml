@@ -13,7 +13,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      # - .:/app
+      - .:/app
       - ./media:/app/media/
     env_file:
       - ./env/backend.env

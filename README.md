@@ -4,7 +4,8 @@
 #### Web API for managing simple votings
 
 ## Example of website:
-[Votings app](http://185.250.205.16:8000) ('admin' for login and password)
+[Votings](http://185.250.205.16:8000)  
+[Admin](http://185.250.205.16:8000/admin/) (user: manager | pass: top_secret)
 
 ## Available end-points:
 |           End-point |     Description             |
@@ -37,8 +38,7 @@ Rename "env_template" to "env" and fill it in.
 You can run app by docker-compose:
 
 ```bash
-docker-compose build
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 

@@ -98,12 +98,10 @@ class VotingViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        max_votes = max([i.amount for i in members])
-        leaders = [i for i in members if i.amount == max_votes]
-        if len(leaders) == 1:
-            vote = leaders[0]
-            character = vote.character
-            character.votes_amount = vote.amount
+        leader_vote = members.order_by('-amount').first()
+        if leader_vote:
+            character = leader_vote.character
+            character.votes_amount = leader_vote.amount
             serializer = CharacterSerializer(
                 character,
                 many=False,
@@ -112,7 +110,7 @@ class VotingViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(
-                data={"detail": f"Voting id {pk} members have no leader"},
+                data={"detail": f"Voting id {pk} members has no leader"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
