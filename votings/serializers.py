@@ -20,7 +20,7 @@ class CharacterSerializer(serializers.HyperlinkedModelSerializer):
         model = Character
         fields = ['url', 'id', 'last_name', 'first_name', 'second_name',
                   'age', 'description', 'votes_amount', 'photo']
-        
+
     def get_age(self, obj: Character):
         return calculate_age(obj.birth_date)
 
