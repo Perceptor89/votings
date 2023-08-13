@@ -1,13 +1,47 @@
 version: '3.8'
 volumes:
-  pg_data:
+  postgres_data:
+  redis_data:
 services:
-  pg_db:
+  backend:
+    build: ./
+    image: api_backend
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+      - ./media:/app/media/
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - redis
+      - postgres
+  postgres:
     image: postgres
     restart: always
     env_file:
-      - ./.env
+      - ./env/postgres.env
     volumes:
-      - pg_data:/var/lib/postgresql/data
-    ports:
-      - ${POSTGRES_PORT:-5432}:5432
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis
+    restart: always
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+  celery_worker:
+    build: ./
+    image: celery_worker
+    command: >
+      sh -c "python -m celery -A API_project worker -l info"
+    volumes:
+      - .:/app
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - redis
+      - postgres

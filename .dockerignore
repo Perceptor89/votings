@@ -1,0 +1,10 @@
+.github
+.venv
+develop/
+env/*
+.env.example
+.gitignore
+.docker-compose.yaml
+README.md
+setup.cfg
+.dockerignore

@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 from votings import views
 
@@ -16,5 +16,9 @@ urlpatterns = [
         'votings/<int:pk>/characters/<int:pk_2>/add_vote/',
         views.CharacterVoteView.as_view(),
         name='voting-add-vote'
-    )
+    ),
+    re_path(
+        r'media/(?P<file_path>.*?)$',
+        views.FileDownloadView.as_view(),
+        name='file-download'),
 ]
